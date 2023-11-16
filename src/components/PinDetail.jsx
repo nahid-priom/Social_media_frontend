@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdDownloadForOffline } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,26 +15,30 @@ const PinDetail = ({ user }) => {
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
 
-  const fetchPinDetails = () => {
-    const query = pinDetailQuery(pinId);
-
-    if (query) {
-      client.fetch(`${query}`).then((data) => {
-        setPinDetail(data[0]);
-        console.log(data);
-        if (data[0]) {
-          const query1 = pinDetailMorePinQuery(data[0]);
-          client.fetch(query1).then((res) => {
-            setPins(res);
-          });
+  const fetchPinDetails = useCallback(async () => {
+    try {
+      const query = pinDetailQuery(pinId);
+  
+      if (query) {
+        const [data] = await client.fetch(query);
+        setPinDetail(data);
+  
+        if (data) {
+          const query1 = pinDetailMorePinQuery(data);
+          const res = await client.fetch(query1);
+          setPins(res);
         }
-      });
+      }
+    } catch (error) {
+      console.error("Error fetching pin details:", error);
     }
-  };
-
+  }, [pinId]);
+  
   useEffect(() => {
     fetchPinDetails();
-  }, [pinId]);
+  }, [pinId, fetchPinDetails]);
+  
+
 
   const addComment = () => {
     if (comment) {
