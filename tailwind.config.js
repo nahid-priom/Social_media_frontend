@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
     extend: {
       margin: {
@@ -51,22 +51,17 @@ module.exports = {
       keyframes: {
         'slide-in': {
           '0%': {
-            '-webkit-transform': 'translateX(-200px)',
             transform: 'translateX(-200px)',
           },
           '100%': {
-            '-webkit-transform': 'translateX(0px)',
             transform: 'translateX(0px)',
           },
         },
-
         'slide-fwd': {
           '0%': {
-            '-webkit-transform': 'translateZ(0px)',
             transform: 'translateZ(0px)',
           },
           '100%': {
-            '-webkit-transform': 'translateZ(160px)',
             transform: 'translateZ(160px)',
           },
         },
@@ -85,7 +80,6 @@ module.exports = {
     },
   },
   variants: {
-    // backgroundColor: ['active'],
     extend: {},
   },
   plugins: [],
