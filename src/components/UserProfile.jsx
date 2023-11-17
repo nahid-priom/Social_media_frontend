@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { useParams, useNavigate } from 'react-router-dom';
-import { GoogleLogout } from 'react-google-login';
+import { GoogleLogin } from '@react-oauth/google';
 
 import { userCreatedPinsQuery, userQuery, userSavedPinsQuery } from '../utils/data';
 import { client } from '../client';
@@ -46,7 +46,6 @@ const UserProfile = () => {
 
   const logout = () => {
     localStorage.clear();
-
     navigate('/login');
   };
 
@@ -73,8 +72,12 @@ const UserProfile = () => {
           </h1>
           <div className="absolute top-0 z-1 right-0 p-2">
             {userId === User.googleId && (
-              <GoogleLogout
+              <GoogleLogin
                 clientId={`${process.env.REACT_APP_GOOGLE_API_TOKEN}`}
+                onInitFailure={(err) => console.error(err)}
+                onSuccess={() => {}}
+                onLogoutSuccess={logout}
+                cookiePolicy="single_host_origin"
                 render={(renderProps) => (
                   <button
                     type="button"
@@ -85,8 +88,6 @@ const UserProfile = () => {
                     <AiOutlineLogout color="red" fontSize={21} />
                   </button>
                 )}
-                onLogoutSuccess={logout}
-                cookiePolicy="single_host_origin"
               />
             )}
           </div>
@@ -119,12 +120,11 @@ const UserProfile = () => {
         </div>
 
         {pins?.length === 0 && (
-        <div className="flex justify-center font-bold items-center w-full text-1xl mt-2">
-          No Pins Found!
-        </div>
+          <div className="flex justify-center font-bold items-center w-full text-1xl mt-2">
+            No Pins Found!
+          </div>
         )}
       </div>
-
     </div>
   );
 };
